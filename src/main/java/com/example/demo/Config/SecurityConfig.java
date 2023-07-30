@@ -5,6 +5,7 @@ package com.example.demo.Config;
 
 
 
+import com.example.demo.Filter.CustomAuthenticationFilter;
 import com.example.demo.Filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,17 +51,15 @@ private AuthenticationManager authenticationManager;
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry -> {
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/login/**").permitAll();
                     authorizationManagerRequestMatcherRegistry.requestMatchers("/auth/**").permitAll();
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/test/**").hasAuthority("ROLE_USER");
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/test1/**").permitAll();
+                    authorizationManagerRequestMatcherRegistry.requestMatchers("/user/**").hasAuthority("ROLE_USER");
+                    authorizationManagerRequestMatcherRegistry.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN");
                     authorizationManagerRequestMatcherRegistry.anyRequest().authenticated();
                 })
 
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-//                .addFilter(new CustomAuthenticationFilter(authenticationManager))
+                .addFilter(new CustomAuthenticationFilter(authenticationManager))
                 .addFilterBefore(new JwtFilter(),UsernamePasswordAuthenticationFilter.class)
-
-//                .httpBasic(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
 
         ;
 

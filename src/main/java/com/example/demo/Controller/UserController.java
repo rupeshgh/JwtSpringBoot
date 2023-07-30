@@ -6,14 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/test1")
-public class random {
-
+@RequestMapping("/user")
+public class UserController {
 
 
     @GetMapping("")
-    public void ssasa(){
+    public void Welcome(){
 
-        System.out.println("test1 ");
+        System.out.println("You have a user role ");
     }
 }

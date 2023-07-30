@@ -28,6 +28,9 @@ public class JwtSpringBootApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
+		//creating user and role and assigning role to user
+
+
 		Role r1= new Role();
 		r1.setName("ROLE_USER");
 
@@ -39,25 +42,21 @@ public class JwtSpringBootApplication implements CommandLineRunner {
 		roleRepository.save(r2);
 
 
-//		roleService.saveRoles(r1);
-//		roleService.saveRoles(r2);
-
-
 		User u1= new User();
-		u1.setUsername("xyz");
+		u1.setUsername("user");
 		u1.setPassword("123456");
 		u1.getRole().add(r1);
 
 		userRepository.save(u1);
-//		userService.addUser(u1);
+
 
 		User u2= new User();
-		u2.setUsername("xyz1");
+		u2.setUsername("admin");
 		u2.setPassword("123456");
 		u2.getRole().add(r2);
 
 		userRepository.save(u2);
-//	userService.addUser(u2);
+
 
 
 	}

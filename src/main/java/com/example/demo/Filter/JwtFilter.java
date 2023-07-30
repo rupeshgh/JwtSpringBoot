@@ -22,10 +22,13 @@ import java.util.Collection;
 public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    String Authorization=request.getHeader("Authorization");
 
+        //Extract Authorization header
+        String Authorization=request.getHeader("Authorization");
     if(Authorization!=null && Authorization.startsWith("Bearer ")){
 
+        //if starts with Bearer its a Jwt Token
+        //Get token and decode the token
         try{
             String token=Authorization.substring(7);
 
@@ -34,24 +37,24 @@ public class JwtFilter extends OncePerRequestFilter {
 
             DecodedJWT decodedJWT=verifier.verify(token);
 
+            //extracting username and roles from token
+            //claim called roles was created during token generation
             String username= decodedJWT.getSubject();
             String[] roles=decodedJWT.getClaim("roles").asArray(String.class);
+
             Collection<SimpleGrantedAuthority> authorities=new ArrayList<>();
-
-
             Arrays.stream(roles).forEach(role->authorities.add(new SimpleGrantedAuthority(role)));
 
+
+            //authenticate the user
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken= new UsernamePasswordAuthenticationToken(username,null,authorities);
+             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
 
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            System.out.println("Token here:"+token);
-            System.out.println("Username"+username);
-
-            filterChain.doFilter(request,response);
         }catch (Exception e)
         {
-            System.out.println(e.toString());
+            //Can result in different types of  exception
+            e.printStackTrace();
         }
 
 
